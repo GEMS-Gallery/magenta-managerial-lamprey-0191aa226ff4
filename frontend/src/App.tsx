@@ -174,7 +174,11 @@ const App: React.FC = () => {
                 <span className="username">{formatPrincipal(photo.creator)}</span>
                 <span className="category-tag">{photo.category}</span>
                 {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
-                  <Delete className="delete-icon" onClick={() => handleRemovePhoto(photo.id)} />
+                  <Delete 
+                    className="delete-icon" 
+                    onClick={() => handleRemovePhoto(photo.id)} 
+                    titleAccess="Delete post"
+                  />
                 )}
               </div>
               <div className="post-image">

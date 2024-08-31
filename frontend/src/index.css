@@ -297,7 +297,8 @@ body {
 .delete-icon {
     cursor: pointer;
     color: #ff4136;
-    margin-left: auto;
+    margin-left: 10px;
+    font-size: 20px;
 }
 .delete-icon:hover {
     color: #ff1a1a;
