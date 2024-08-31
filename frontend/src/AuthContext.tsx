@@ -6,7 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => void;
-  principal: Principal | null;
+  principal: Principal| null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

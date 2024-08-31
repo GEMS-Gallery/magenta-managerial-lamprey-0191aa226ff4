@@ -21,8 +21,10 @@ export const idlFactory = ({ IDL }) => {
     'addPhoto' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [Result_1], []),
     'getPhotos' : IDL.Func([], [IDL.Vec(Photo)], ['query']),
     'getPhotosByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Photo)], ['query']),
+    'getProfilePicture' : IDL.Func([], [IDL.Opt(IDL.Text)], ['query']),
     'likePhoto' : IDL.Func([IDL.Nat], [Result], []),
     'removePhoto' : IDL.Func([IDL.Nat], [Result], []),
+    'setProfilePicture' : IDL.Func([IDL.Text], [Result], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

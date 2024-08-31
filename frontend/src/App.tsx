@@ -26,11 +26,16 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'tile'>('grid');
+  const [profilePictureModalOpen, setProfilePictureModalOpen] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const { isAuthenticated, login, logout, principal } = useAuth();
 
   useEffect(() => {
     fetchPhotos();
-  }, [selectedCategory]);
+    if (isAuthenticated) {
+      checkProfilePicture();
+    }
+  }, [selectedCategory, isAuthenticated]);
 
   useEffect(() => {
     const savedViewMode = localStorage.getItem('viewMode');
@@ -50,6 +55,29 @@ const App: React.FC = () => {
       setPhotos(result);
     } catch (error) {
       console.error('Error fetching photos:', error);
+    }
+  };
+
+  const checkProfilePicture = async () => {
+    try {
+      const profilePic = await backend.getProfilePicture();
+      if (profilePic === null) {
+        setProfilePictureModalOpen(true);
+      } else {
+        setProfilePicture(profilePic);
+      }
+    } catch (error) {
+      console.error('Error checking profile picture:', error);
+    }
+  };
+
+  const handleSetProfilePicture = async (imageUrl: string) => {
+    try {
+      await backend.setProfilePicture(imageUrl);
+      setProfilePicture(imageUrl);
+      setProfilePictureModalOpen(false);
+    } catch (error) {
+      console.error('Error setting profile picture:', error);
     }
   };
 
@@ -170,7 +198,7 @@ const App: React.FC = () => {
           {photos.map((photo) => (
             <div key={photo.id.toString()} className={`post post-${viewMode}`}>
               <div className="post-header">
-                <img src="https://media.licdn.com/dms/image/v2/C5603AQGthJL_DcMSIA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1518390992393?e=1730332800&v=beta&t=ntycoeGZWdBdxV57CBirNF1x9CNYl_6DWMIi-bWVgjM" alt="User Profile Picture" />
+                <img src={profilePicture || "https://via.placeholder.com/28"} alt="User Profile Picture" />
                 <span className="username">{formatPrincipal(photo.creator)}</span>
                 <span className="category-tag">{photo.category}</span>
                 {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
@@ -243,6 +271,19 @@ const App: React.FC = () => {
               <input type="text" id="photoUrl" name="photoUrl" placeholder="Enter photo URL (1080x1080px recommended)" required />
               <button type="submit">Upload</button>
             </form>
+          </div>
+        </div>
+      )}
+      {profilePictureModalOpen && (
+        <div className="profile-picture-modal">
+          <div className="profile-picture-form">
+            <h2>Set Profile Picture</h2>
+            <input 
+              type="text" 
+              placeholder="Enter profile picture URL"
+              onChange={(e) => setProfilePicture(e.target.value)}
+            />
+            <button onClick={() => handleSetProfilePicture(profilePicture || '')}>Set Profile Picture</button>
           </div>
         </div>
       )}

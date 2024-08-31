@@ -30,6 +30,8 @@ service : {
   addPhoto: (text, text, text) -> (Result_1);
   getPhotos: () -> (vec Photo) query;
   getPhotosByCategory: (text) -> (vec Photo) query;
+  getProfilePicture: () -> (opt text) query;
   likePhoto: (nat) -> (Result);
   removePhoto: (nat) -> (Result);
+  setProfilePicture: (text) -> (Result);
 }

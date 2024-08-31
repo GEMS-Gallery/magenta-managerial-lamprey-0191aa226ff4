@@ -29,10 +29,17 @@ actor {
     createdAt: Int;
   };
 
+  type UserProfile = {
+    principal: Principal;
+    profilePicture: ?Text;
+  };
+
   stable var nextPhotoId: Nat = 0;
   stable var photoEntries: [(Nat, Photo)] = [];
+  stable var userProfileEntries: [(Principal, UserProfile)] = [];
 
   let photos = HashMap.fromIter<Nat, Photo>(photoEntries.vals(), 0, Nat.equal, Int.hash);
+  let userProfiles = HashMap.fromIter<Principal, UserProfile>(userProfileEntries.vals(), 10, Principal.equal, Principal.hash);
 
   func generateId() : Nat {
     nextPhotoId += 1;
@@ -108,11 +115,38 @@ actor {
     }
   };
 
+  public shared(msg) func setProfilePicture(imageUrl: Text) : async Result.Result<(), Text> {
+    let profile = switch (userProfiles.get(msg.caller)) {
+      case (null) {
+        {
+          principal = msg.caller;
+          profilePicture = ?imageUrl;
+        }
+      };
+      case (?existingProfile) {
+        {
+          existingProfile with profilePicture = ?imageUrl
+        }
+      };
+    };
+    userProfiles.put(msg.caller, profile);
+    #ok()
+  };
+
+  public query(msg) func getProfilePicture() : async ?Text {
+    switch (userProfiles.get(msg.caller)) {
+      case (null) { null };
+      case (?profile) { profile.profilePicture };
+    }
+  };
+
   system func preupgrade() {
     photoEntries := Iter.toArray(photos.entries());
+    userProfileEntries := Iter.toArray(userProfiles.entries());
   };
 
   system func postupgrade() {
     photoEntries := [];
+    userProfileEntries := [];
   };
 }
