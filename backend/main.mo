@@ -17,14 +17,14 @@ actor {
     title: Text;
     category: Text;
     imageUrl: Text;
-    creator: Text;
+    creator: Principal;
     createdAt: Int;
     likes: Nat;
     comments: [Comment];
   };
 
   type Comment = {
-    author: Text;
+    author: Principal;
     content: Text;
     createdAt: Int;
   };
@@ -47,17 +47,14 @@ actor {
     Iter.toArray(Iter.filter(photos.vals(), func (photo: Photo) : Bool { photo.category == category }))
   };
 
-  public shared(msg) func addPhoto(title: Text, category: Text, imageUrl: Text, creator: Text) : async Result.Result<Nat, Text> {
-    if (Principal.isAnonymous(msg.caller)) {
-      return #err("Authentication required");
-    };
+  public shared(msg) func addPhoto(title: Text, category: Text, imageUrl: Text) : async Result.Result<Nat, Text> {
     let id = generateId();
     let newPhoto: Photo = {
       id = id;
       title = title;
       category = category;
       imageUrl = imageUrl;
-      creator = creator;
+      creator = msg.caller;
       createdAt = Time.now();
       likes = 0;
       comments = [];
@@ -79,15 +76,12 @@ actor {
     }
   };
 
-  public shared(msg) func addComment(photoId: Nat, author: Text, content: Text) : async Result.Result<(), Text> {
-    if (Principal.isAnonymous(msg.caller)) {
-      return #err("Authentication required");
-    };
+  public shared(msg) func addComment(photoId: Nat, content: Text) : async Result.Result<(), Text> {
     switch (photos.get(photoId)) {
       case (null) { #err("Photo not found") };
       case (?photo) {
         let newComment: Comment = {
-          author = author;
+          author = msg.caller;
           content = content;
           createdAt = Time.now();
         };

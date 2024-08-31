@@ -5,12 +5,12 @@ import type { IDL } from '@dfinity/candid';
 export interface Comment {
   'content' : string,
   'createdAt' : bigint,
-  'author' : string,
+  'author' : Principal,
 }
 export interface Photo {
   'id' : bigint,
   'title' : string,
-  'creator' : string,
+  'creator' : Principal,
   'createdAt' : bigint,
   'likes' : bigint,
   'imageUrl' : string,
@@ -22,8 +22,8 @@ export type Result = { 'ok' : null } |
 export type Result_1 = { 'ok' : bigint } |
   { 'err' : string };
 export interface _SERVICE {
-  'addComment' : ActorMethod<[bigint, string, string], Result>,
-  'addPhoto' : ActorMethod<[string, string, string, string], Result_1>,
+  'addComment' : ActorMethod<[bigint, string], Result>,
+  'addPhoto' : ActorMethod<[string, string, string], Result_1>,
   'getPhotos' : ActorMethod<[], Array<Photo>>,
   'getPhotosByCategory' : ActorMethod<[string], Array<Photo>>,
   'likePhoto' : ActorMethod<[bigint], Result>,

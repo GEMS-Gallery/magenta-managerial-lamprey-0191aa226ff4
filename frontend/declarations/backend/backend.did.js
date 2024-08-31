@@ -4,12 +4,12 @@ export const idlFactory = ({ IDL }) => {
   const Comment = IDL.Record({
     'content' : IDL.Text,
     'createdAt' : IDL.Int,
-    'author' : IDL.Text,
+    'author' : IDL.Principal,
   });
   const Photo = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
-    'creator' : IDL.Text,
+    'creator' : IDL.Principal,
     'createdAt' : IDL.Int,
     'likes' : IDL.Nat,
     'imageUrl' : IDL.Text,
@@ -17,12 +17,8 @@ export const idlFactory = ({ IDL }) => {
     'comments' : IDL.Vec(Comment),
   });
   return IDL.Service({
-    'addComment' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [Result], []),
-    'addPhoto' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
-        [Result_1],
-        [],
-      ),
+    'addComment' : IDL.Func([IDL.Nat, IDL.Text], [Result], []),
+    'addPhoto' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [Result_1], []),
     'getPhotos' : IDL.Func([], [IDL.Vec(Photo)], ['query']),
     'getPhotosByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Photo)], ['query']),
     'likePhoto' : IDL.Func([IDL.Nat], [Result], []),

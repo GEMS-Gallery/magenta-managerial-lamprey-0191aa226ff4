@@ -13,7 +13,7 @@ type Photo =
    category: text;
    comments: vec Comment;
    createdAt: int;
-   creator: text;
+   creator: principal;
    id: nat;
    imageUrl: text;
    likes: nat;
@@ -21,13 +21,13 @@ type Photo =
  };
 type Comment = 
  record {
-   author: text;
+   author: principal;
    content: text;
    createdAt: int;
  };
 service : {
-  addComment: (nat, text, text) -> (Result);
-  addPhoto: (text, text, text, text) -> (Result_1);
+  addComment: (nat, text) -> (Result);
+  addPhoto: (text, text, text) -> (Result_1);
   getPhotos: () -> (vec Photo) query;
   getPhotosByCategory: (text) -> (vec Photo) query;
   likePhoto: (nat) -> (Result);

@@ -2,20 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
 import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule, ViewQuilt } from '@mui/icons-material';
 import { useAuth } from './AuthContext';
+import { Principal } from '@dfinity/principal';
 
 interface Photo {
   id: bigint;
   title: string;
   category: string;
   imageUrl: string;
-  creator: string;
+  creator: Principal;
   createdAt: bigint;
   likes: bigint;
   comments: Comment[];
 }
 
 interface Comment {
-  author: string;
+  author: Principal;
   content: string;
   createdAt: bigint;
 }
@@ -25,7 +26,7 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'tile'>('grid');
-  const { isAuthenticated, login, logout } = useAuth();
+  const { isAuthenticated, login, logout, principal } = useAuth();
 
   useEffect(() => {
     fetchPhotos();
@@ -67,7 +68,7 @@ const App: React.FC = () => {
       return;
     }
     try {
-      await backend.addComment(id, 'Josh', content);
+      await backend.addComment(id, content);
       fetchPhotos();
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -80,7 +81,7 @@ const App: React.FC = () => {
       return;
     }
     try {
-      await backend.addPhoto(title, category, imageUrl, 'Josh');
+      await backend.addPhoto(title, category, imageUrl);
       fetchPhotos();
       setModalIsOpen(false);
     } catch (error) {
@@ -99,6 +100,11 @@ const App: React.FC = () => {
     People: <People />,
     Food: <Restaurant />,
     Sports: <SportsBasketball />,
+  };
+
+  const formatPrincipal = (principal: Principal) => {
+    const principalString = principal.toString();
+    return `${principalString.slice(0, 5)}...${principalString.slice(-5)}`;
   };
 
   return (
@@ -150,7 +156,7 @@ const App: React.FC = () => {
             <div key={photo.id.toString()} className={`post post-${viewMode}`}>
               <div className="post-header">
                 <img src="https://media.licdn.com/dms/image/v2/C5603AQGthJL_DcMSIA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1518390992393?e=1730332800&v=beta&t=ntycoeGZWdBdxV57CBirNF1x9CNYl_6DWMIi-bWVgjM" alt="User Profile Picture" />
-                <span className="username">{photo.creator}</span>
+                <span className="username">{formatPrincipal(photo.creator)}</span>
                 <span className="category-tag">{photo.category}</span>
               </div>
               <div className="post-image">
@@ -165,12 +171,12 @@ const App: React.FC = () => {
                 <span className="post-likes">{photo.likes.toString()} likes</span>
               </div>
               <div className="post-caption">
-                <strong>{photo.creator}</strong> {photo.title}
+                <strong>{formatPrincipal(photo.creator)}</strong> {photo.title}
               </div>
               <div className="comments">
                 {photo.comments.map((comment, index) => (
                   <div key={index} className="comment">
-                    <strong>{comment.author}</strong> {comment.content}
+                    <strong>{formatPrincipal(comment.author)}</strong> {comment.content}
                   </div>
                 ))}
               </div>
