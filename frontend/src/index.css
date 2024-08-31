@@ -22,7 +22,8 @@ body {
     height: 44px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0 20px;
     z-index: 1000;
 }
 .logo {
@@ -40,6 +41,12 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+.view-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
 }
 .left-menu {
     width: 215px;
@@ -74,12 +81,27 @@ body {
     margin-left: 255px;
     padding: 10px;
 }
+.feed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+.feed-list {
+    display: flex;
+    flex-direction: column;
+}
 .post {
     background-color: #fff;
     border: 1px solid #dbdbdb;
     border-radius: 3px;
     margin-bottom: 20px;
     max-width: 1080px;
+}
+.post-grid {
+    margin-bottom: 0;
+}
+.post-list {
+    margin-bottom: 20px;
 }
 .post-header {
     padding: 8px;

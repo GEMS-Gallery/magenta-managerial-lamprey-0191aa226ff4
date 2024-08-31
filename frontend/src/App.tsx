@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
-import { GridOn, Landscape, People, Restaurant, SportsBasketball } from '@mui/icons-material';
+import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule } from '@mui/icons-material';
 
 interface Photo {
   id: bigint;
@@ -23,10 +23,18 @@ const App: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
     fetchPhotos();
   }, [selectedCategory]);
+
+  useEffect(() => {
+    const savedViewMode = localStorage.getItem('viewMode');
+    if (savedViewMode) {
+      setViewMode(savedViewMode as 'grid' | 'list');
+    }
+  }, []);
 
   const fetchPhotos = async () => {
     try {
@@ -70,6 +78,12 @@ const App: React.FC = () => {
     }
   };
 
+  const toggleViewMode = () => {
+    const newViewMode = viewMode === 'grid' ? 'list' : 'grid';
+    setViewMode(newViewMode);
+    localStorage.setItem('viewMode', newViewMode);
+  };
+
   const categoryIcons = {
     All: <GridOn />,
     Travel: <Landscape />,
@@ -85,6 +99,9 @@ const App: React.FC = () => {
           <div className="logo-icon"></div>
           Pixel
         </div>
+        <button className="view-toggle" onClick={toggleViewMode}>
+          {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
+        </button>
       </header>
       <div className="container">
         <nav className="left-menu">
@@ -99,9 +116,9 @@ const App: React.FC = () => {
             </div>
           ))}
         </nav>
-        <div className="feed">
+        <div className={`feed feed-${viewMode}`}>
           {photos.map((photo) => (
-            <div key={photo.id.toString()} className="post">
+            <div key={photo.id.toString()} className={`post post-${viewMode}`}>
               <div className="post-header">
                 <img src="https://media.licdn.com/dms/image/v2/C5603AQGthJL_DcMSIA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1518390992393?e=1730332800&v=beta&t=ntycoeGZWdBdxV57CBirNF1x9CNYl_6DWMIi-bWVgjM" alt="User Profile Picture" />
                 <span className="username">{photo.creator}</span>
