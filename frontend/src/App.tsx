@@ -103,7 +103,7 @@ const App: React.FC = () => {
           {photos.map((photo) => (
             <div key={photo.id.toString()} className="post">
               <div className="post-header">
-                <img src="/api/placeholder/32/32" alt="User Avatar" />
+                <img src="https://media.licdn.com/dms/image/v2/C5603AQGthJL_DcMSIA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1518390992393?e=1730332800&v=beta&t=ntycoeGZWdBdxV57CBirNF1x9CNYl_6DWMIi-bWVgjM" alt="User Profile Picture" />
                 <span className="username">{photo.creator}</span>
                 <span className="category-tag">{photo.category}</span>
               </div>
