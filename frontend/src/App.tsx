@@ -25,6 +25,8 @@ const App: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'tile'>('grid');
 
+  const USERNAME = 'Josh';
+
   useEffect(() => {
     fetchPhotos();
   }, [selectedCategory]);
@@ -61,7 +63,7 @@ const App: React.FC = () => {
 
   const handleAddComment = async (id: bigint, content: string) => {
     try {
-      await backend.addComment(id, 'Anonymous', content);
+      await backend.addComment(id, USERNAME, content);
       fetchPhotos();
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -70,7 +72,7 @@ const App: React.FC = () => {
 
   const handleAddPhoto = async (title: string, category: string, imageUrl: string) => {
     try {
-      await backend.addPhoto(title, category, imageUrl, 'Anonymous');
+      await backend.addPhoto(title, category, imageUrl, USERNAME);
       fetchPhotos();
       setModalIsOpen(false);
     } catch (error) {
