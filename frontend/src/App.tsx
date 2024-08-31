@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
-import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule, ViewQuilt } from '@mui/icons-material';
+import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule, ViewQuilt, Delete } from '@mui/icons-material';
 import { useAuth } from './AuthContext';
 import { Principal } from '@dfinity/principal';
 
@@ -174,7 +174,7 @@ const App: React.FC = () => {
                 <span className="username">{formatPrincipal(photo.creator)}</span>
                 <span className="category-tag">{photo.category}</span>
                 {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
-                  <button className="remove-btn" onClick={() => handleRemovePhoto(photo.id)}>Remove</button>
+                  <Delete className="delete-icon" onClick={() => handleRemovePhoto(photo.id)} />
                 )}
               </div>
               <div className="post-image">

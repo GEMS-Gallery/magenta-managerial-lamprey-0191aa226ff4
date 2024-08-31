@@ -294,16 +294,11 @@ body {
 .auth-button:hover {
     background-color: #333;
 }
-.remove-btn {
-    background-color: #ff4136;
-    color: #fff;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+.delete-icon {
     cursor: pointer;
-    font-size: 12px;
+    color: #ff4136;
     margin-left: auto;
 }
-.remove-btn:hover {
-    background-color: #ff1a1a;
+.delete-icon:hover {
+    color: #ff1a1a;
 }
