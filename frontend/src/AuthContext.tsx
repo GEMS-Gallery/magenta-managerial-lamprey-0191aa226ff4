@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
-import { Principal } from '@dfinity/principal';
+import { Principal }from '@dfinity/principal';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => void;
-  principal: Principal| null;
+  principal: Principal | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

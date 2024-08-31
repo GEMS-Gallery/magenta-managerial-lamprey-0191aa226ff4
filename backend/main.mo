@@ -148,5 +148,6 @@ actor {
   system func postupgrade() {
     photoEntries := [];
     userProfileEntries := [];
+    nextPhotoId := 0;
   };
 }

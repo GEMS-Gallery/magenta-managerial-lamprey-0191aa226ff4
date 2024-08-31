@@ -195,54 +195,58 @@ const App: React.FC = () => {
           ))}
         </nav>
         <div className={`feed feed-${viewMode}`}>
-          {photos.map((photo) => (
-            <div key={photo.id.toString()} className={`post post-${viewMode}`}>
-              <div className="post-header">
-                <img src={profilePicture || "https://via.placeholder.com/28"} alt="User Profile Picture" />
-                <span className="username">{formatPrincipal(photo.creator)}</span>
-                <span className="category-tag">{photo.category}</span>
-                {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
-                  <Delete 
-                    className="delete-icon" 
-                    onClick={() => handleRemovePhoto(photo.id)} 
-                    titleAccess="Delete post"
-                  />
+          {photos.length === 0 ? (
+            <div className="empty-state">No photos available. Be the first to add one!</div>
+          ) : (
+            photos.map((photo) => (
+              <div key={photo.id.toString()} className={`post post-${viewMode}`}>
+                <div className="post-header">
+                  <img src={profilePicture || "https://via.placeholder.com/28"} alt="User Profile Picture" />
+                  <span className="username">{formatPrincipal(photo.creator)}</span>
+                  <span className="category-tag">{photo.category}</span>
+                  {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
+                    <Delete 
+                      className="delete-icon" 
+                      onClick={() => handleRemovePhoto(photo.id)} 
+                      titleAccess="Delete post"
+                    />
+                  )}
+                </div>
+                <div className="post-image">
+                  <img src={photo.imageUrl} alt={photo.title} />
+                </div>
+                <div className="post-actions">
+                  <button className="action-btn like-btn" onClick={() => handleLike(photo.id)}>
+                    <svg className="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#000" strokeWidth="2"/>
+                    </svg>
+                  </button>
+                  <span className="post-likes">{photo.likes.toString()} likes</span>
+                </div>
+                <div className="post-caption">
+                  <strong>{formatPrincipal(photo.creator)}</strong> {photo.title}
+                </div>
+                <div className="comments">
+                  {photo.comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                      <strong>{formatPrincipal(comment.author)}</strong> {comment.content}
+                    </div>
+                  ))}
+                </div>
+                {isAuthenticated && (
+                  <form className="comment-form" onSubmit={(e) => {
+                    e.preventDefault();
+                    const input = e.currentTarget.elements.namedItem('comment') as HTMLInputElement;
+                    handleAddComment(photo.id, input.value);
+                    input.value = '';
+                  }}>
+                    <input type="text" name="comment" className="comment-input" placeholder="Add a comment..." />
+                    <button type="submit" className="comment-submit">Post</button>
+                  </form>
                 )}
               </div>
-              <div className="post-image">
-                <img src={photo.imageUrl} alt={photo.title} />
-              </div>
-              <div className="post-actions">
-                <button className="action-btn like-btn" onClick={() => handleLike(photo.id)}>
-                  <svg className="action-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#000" strokeWidth="2"/>
-                  </svg>
-                </button>
-                <span className="post-likes">{photo.likes.toString()} likes</span>
-              </div>
-              <div className="post-caption">
-                <strong>{formatPrincipal(photo.creator)}</strong> {photo.title}
-              </div>
-              <div className="comments">
-                {photo.comments.map((comment, index) => (
-                  <div key={index} className="comment">
-                    <strong>{formatPrincipal(comment.author)}</strong> {comment.content}
-                  </div>
-                ))}
-              </div>
-              {isAuthenticated && (
-                <form className="comment-form" onSubmit={(e) => {
-                  e.preventDefault();
-                  const input = e.currentTarget.elements.namedItem('comment') as HTMLInputElement;
-                  handleAddComment(photo.id, input.value);
-                  input.value = '';
-                }}>
-                  <input type="text" name="comment" className="comment-input" placeholder="Add a comment..." />
-                  <button type="submit" className="comment-submit">Post</button>
-                </form>
-              )}
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
       {isAuthenticated && (
