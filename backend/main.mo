@@ -10,6 +10,7 @@ import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
+import Debug "mo:base/Debug";
 
 actor {
   type Photo = {
@@ -108,7 +109,7 @@ actor {
         if (photo.creator != msg.caller) {
           #err("Only the creator can remove this photo")
         } else {
-          photos.delete(photoId);
+          ignore photos.remove(photoId);
           #ok()
         }
       };
@@ -116,6 +117,7 @@ actor {
   };
 
   public shared(msg) func setProfilePicture(imageUrl: Text) : async Result.Result<(), Text> {
+    Debug.print("Setting profile picture for principal: " # Principal.toText(msg.caller));
     let profile = switch (userProfiles.get(msg.caller)) {
       case (null) {
         {
@@ -134,6 +136,7 @@ actor {
   };
 
   public query(msg) func getProfilePicture() : async ?Text {
+    Debug.print("Getting profile picture for principal: " # Principal.toText(msg.caller));
     switch (userProfiles.get(msg.caller)) {
       case (null) { null };
       case (?profile) { profile.profilePicture };

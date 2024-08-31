@@ -73,9 +73,13 @@ const App: React.FC = () => {
 
   const handleSetProfilePicture = async (imageUrl: string) => {
     try {
-      await backend.setProfilePicture(imageUrl);
-      setProfilePicture(imageUrl);
-      setProfilePictureModalOpen(false);
+      const result = await backend.setProfilePicture(imageUrl);
+      if ('ok' in result) {
+        setProfilePicture(imageUrl);
+        setProfilePictureModalOpen(false);
+      } else {
+        console.error('Error setting profile picture:', result.err);
+      }
     } catch (error) {
       console.error('Error setting profile picture:', error);
     }
@@ -124,8 +128,12 @@ const App: React.FC = () => {
     }
     if (confirm('Are you sure you want to remove this photo?')) {
       try {
-        await backend.removePhoto(id);
-        fetchPhotos();
+        const result = await backend.removePhoto(id);
+        if ('ok' in result) {
+          fetchPhotos();
+        } else {
+          console.error('Error removing photo:', result.err);
+        }
       } catch (error) {
         console.error('Error removing photo:', error);
       }
