@@ -162,7 +162,7 @@ const App: React.FC = () => {
                 <option value="Food">Food</option>
                 <option value="Sports">Sports</option>
               </select>
-              <input type="text" id="photoUrl" name="photoUrl" placeholder="Enter photo URL" required />
+              <input type="text" id="photoUrl" name="photoUrl" placeholder="Enter photo URL (1080x1080px recommended)" required />
               <button type="submit">Upload</button>
             </form>
           </div>
