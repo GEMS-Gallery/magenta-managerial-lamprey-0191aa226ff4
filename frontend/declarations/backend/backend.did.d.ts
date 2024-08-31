@@ -27,6 +27,7 @@ export interface _SERVICE {
   'getPhotos' : ActorMethod<[], Array<Photo>>,
   'getPhotosByCategory' : ActorMethod<[string], Array<Photo>>,
   'likePhoto' : ActorMethod<[bigint], Result>,
+  'removePhoto' : ActorMethod<[bigint], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

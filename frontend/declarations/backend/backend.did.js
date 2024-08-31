@@ -22,6 +22,7 @@ export const idlFactory = ({ IDL }) => {
     'getPhotos' : IDL.Func([], [IDL.Vec(Photo)], ['query']),
     'getPhotosByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Photo)], ['query']),
     'likePhoto' : IDL.Func([IDL.Nat], [Result], []),
+    'removePhoto' : IDL.Func([IDL.Nat], [Result], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

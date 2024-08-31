@@ -89,6 +89,21 @@ const App: React.FC = () => {
     }
   };
 
+  const handleRemovePhoto = async (id: bigint) => {
+    if (!isAuthenticated) {
+      alert('Please login to remove a photo');
+      return;
+    }
+    if (confirm('Are you sure you want to remove this photo?')) {
+      try {
+        await backend.removePhoto(id);
+        fetchPhotos();
+      } catch (error) {
+        console.error('Error removing photo:', error);
+      }
+    }
+  };
+
   const toggleViewMode = (mode: 'list' | 'grid' | 'tile') => {
     setViewMode(mode);
     localStorage.setItem('viewMode', mode);
@@ -158,6 +173,9 @@ const App: React.FC = () => {
                 <img src="https://media.licdn.com/dms/image/v2/C5603AQGthJL_DcMSIA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1518390992393?e=1730332800&v=beta&t=ntycoeGZWdBdxV57CBirNF1x9CNYl_6DWMIi-bWVgjM" alt="User Profile Picture" />
                 <span className="username">{formatPrincipal(photo.creator)}</span>
                 <span className="category-tag">{photo.category}</span>
+                {isAuthenticated && principal && photo.creator.toString() === principal.toString() && (
+                  <button className="remove-btn" onClick={() => handleRemovePhoto(photo.id)}>Remove</button>
+                )}
               </div>
               <div className="post-image">
                 <img src={photo.imageUrl} alt={photo.title} />

@@ -94,6 +94,20 @@ actor {
     }
   };
 
+  public shared(msg) func removePhoto(photoId: Nat) : async Result.Result<(), Text> {
+    switch (photos.get(photoId)) {
+      case (null) { #err("Photo not found") };
+      case (?photo) {
+        if (photo.creator != msg.caller) {
+          #err("Only the creator can remove this photo")
+        } else {
+          photos.delete(photoId);
+          #ok()
+        }
+      };
+    }
+  };
+
   system func preupgrade() {
     photoEntries := Iter.toArray(photos.entries());
   };

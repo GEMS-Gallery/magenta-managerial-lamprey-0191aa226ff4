@@ -31,4 +31,5 @@ service : {
   getPhotos: () -> (vec Photo) query;
   getPhotosByCategory: (text) -> (vec Photo) query;
   likePhoto: (nat) -> (Result);
+  removePhoto: (nat) -> (Result);
 }
