@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
+import { GridOn, Landscape, People, Restaurant, SportsBasketball } from '@mui/icons-material';
 
 interface Photo {
   id: bigint;
@@ -69,6 +70,14 @@ const App: React.FC = () => {
     }
   };
 
+  const categoryIcons = {
+    All: <GridOn />,
+    Travel: <Landscape />,
+    People: <People />,
+    Food: <Restaurant />,
+    Sports: <SportsBasketball />,
+  };
+
   return (
     <div className="App">
       <header className="header">
@@ -79,13 +88,14 @@ const App: React.FC = () => {
       </header>
       <div className="container">
         <nav className="left-menu">
-          {['All', 'Travel', 'People', 'Food', 'Sports'].map((category) => (
+          {Object.entries(categoryIcons).map(([category, icon]) => (
             <div
               key={category}
               className="menu-item"
               onClick={() => setSelectedCategory(category)}
             >
-              {category}
+              {icon}
+              <span style={{ marginLeft: '8px' }}>{category}</span>
             </div>
           ))}
         </nav>
