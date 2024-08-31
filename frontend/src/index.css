@@ -99,10 +99,16 @@ body {
     font-size: 12px;
     font-weight: 600;
 }
+.post-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
 .post-image img {
-    width: 100%;
-    height: auto;
-    display: block;
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
 }
 .post-actions {
     padding: 16px;
