@@ -282,3 +282,15 @@ body {
 .upload-form button:hover {
     background-color: #333;
 }
+.auth-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.auth-button:hover {
+    background-color: #333;
+}

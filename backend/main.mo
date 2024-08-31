@@ -9,6 +9,7 @@ import Time "mo:base/Time";
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
+import Principal "mo:base/Principal";
 
 actor {
   type Photo = {
@@ -46,7 +47,10 @@ actor {
     Iter.toArray(Iter.filter(photos.vals(), func (photo: Photo) : Bool { photo.category == category }))
   };
 
-  public func addPhoto(title: Text, category: Text, imageUrl: Text, creator: Text) : async Result.Result<Nat, Text> {
+  public shared(msg) func addPhoto(title: Text, category: Text, imageUrl: Text, creator: Text) : async Result.Result<Nat, Text> {
+    if (Principal.isAnonymous(msg.caller)) {
+      return #err("Authentication required");
+    };
     let id = generateId();
     let newPhoto: Photo = {
       id = id;
@@ -75,7 +79,10 @@ actor {
     }
   };
 
-  public func addComment(photoId: Nat, author: Text, content: Text) : async Result.Result<(), Text> {
+  public shared(msg) func addComment(photoId: Nat, author: Text, content: Text) : async Result.Result<(), Text> {
+    if (Principal.isAnonymous(msg.caller)) {
+      return #err("Authentication required");
+    };
     switch (photos.get(photoId)) {
       case (null) { #err("Photo not found") };
       case (?photo) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
 import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule, ViewQuilt } from '@mui/icons-material';
+import { useAuth } from './AuthContext';
 
 interface Photo {
   id: bigint;
@@ -24,8 +25,7 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'tile'>('grid');
-
-  const USERNAME = 'Josh';
+  const { isAuthenticated, login, logout } = useAuth();
 
   useEffect(() => {
     fetchPhotos();
@@ -62,8 +62,12 @@ const App: React.FC = () => {
   };
 
   const handleAddComment = async (id: bigint, content: string) => {
+    if (!isAuthenticated) {
+      alert('Please login to add a comment');
+      return;
+    }
     try {
-      await backend.addComment(id, USERNAME, content);
+      await backend.addComment(id, 'Josh', content);
       fetchPhotos();
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -71,8 +75,12 @@ const App: React.FC = () => {
   };
 
   const handleAddPhoto = async (title: string, category: string, imageUrl: string) => {
+    if (!isAuthenticated) {
+      alert('Please login to add a photo');
+      return;
+    }
     try {
-      await backend.addPhoto(title, category, imageUrl, USERNAME);
+      await backend.addPhoto(title, category, imageUrl, 'Josh');
       fetchPhotos();
       setModalIsOpen(false);
     } catch (error) {
@@ -120,6 +128,9 @@ const App: React.FC = () => {
             <ViewQuilt />
           </button>
         </div>
+        <button className="auth-button" onClick={isAuthenticated ? logout : login}>
+          {isAuthenticated ? 'Logout' : 'Login'}
+        </button>
       </header>
       <div className="container">
         <nav className="left-menu">
@@ -163,20 +174,24 @@ const App: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <form className="comment-form" onSubmit={(e) => {
-                e.preventDefault();
-                const input = e.currentTarget.elements.namedItem('comment') as HTMLInputElement;
-                handleAddComment(photo.id, input.value);
-                input.value = '';
-              }}>
-                <input type="text" name="comment" className="comment-input" placeholder="Add a comment..." />
-                <button type="submit" className="comment-submit">Post</button>
-              </form>
+              {isAuthenticated && (
+                <form className="comment-form" onSubmit={(e) => {
+                  e.preventDefault();
+                  const input = e.currentTarget.elements.namedItem('comment') as HTMLInputElement;
+                  handleAddComment(photo.id, input.value);
+                  input.value = '';
+                }}>
+                  <input type="text" name="comment" className="comment-input" placeholder="Add a comment..." />
+                  <button type="submit" className="comment-submit">Post</button>
+                </form>
+              )}
             </div>
           ))}
         </div>
       </div>
-      <button className="post-btn" onClick={() => setModalIsOpen(true)}>+</button>
+      {isAuthenticated && (
+        <button className="post-btn" onClick={() => setModalIsOpen(true)}>+</button>
+      )}
       {modalIsOpen && (
         <div className="modal">
           <div className="modal-content">
