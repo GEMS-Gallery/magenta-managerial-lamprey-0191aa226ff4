@@ -43,10 +43,19 @@ body {
     background-position: center;
 }
 .view-toggle {
+    display: flex;
+    gap: 10px;
+}
+.view-toggle-btn {
     background: none;
     border: none;
     cursor: pointer;
     padding: 5px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+.view-toggle-btn.active {
+    opacity: 1;
 }
 .left-menu {
     width: 215px;
@@ -90,6 +99,11 @@ body {
     display: flex;
     flex-direction: column;
 }
+.feed-tile {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
 .post {
     background-color: #fff;
     border: 1px solid #dbdbdb;
@@ -102,6 +116,9 @@ body {
 }
 .post-list {
     margin-bottom: 20px;
+}
+.post-tile {
+    margin-bottom: 0;
 }
 .post-header {
     padding: 8px;

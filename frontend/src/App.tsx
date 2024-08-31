@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { backend } from 'declarations/backend';
-import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule } from '@mui/icons-material';
+import { GridOn, Landscape, People, Restaurant, SportsBasketball, ViewList, ViewModule, ViewQuilt } from '@mui/icons-material';
 
 interface Photo {
   id: bigint;
@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<'list' | 'grid' | 'tile'>('grid');
 
   useEffect(() => {
     fetchPhotos();
@@ -31,8 +31,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const savedViewMode = localStorage.getItem('viewMode');
-    if (savedViewMode) {
-      setViewMode(savedViewMode as 'grid' | 'list');
+    if (savedViewMode && (savedViewMode === 'list' || savedViewMode === 'grid' || savedViewMode === 'tile')) {
+      setViewMode(savedViewMode);
     }
   }, []);
 
@@ -78,10 +78,9 @@ const App: React.FC = () => {
     }
   };
 
-  const toggleViewMode = () => {
-    const newViewMode = viewMode === 'grid' ? 'list' : 'grid';
-    setViewMode(newViewMode);
-    localStorage.setItem('viewMode', newViewMode);
+  const toggleViewMode = (mode: 'list' | 'grid' | 'tile') => {
+    setViewMode(mode);
+    localStorage.setItem('viewMode', mode);
   };
 
   const categoryIcons = {
@@ -99,9 +98,26 @@ const App: React.FC = () => {
           <div className="logo-icon"></div>
           Pixel
         </div>
-        <button className="view-toggle" onClick={toggleViewMode}>
-          {viewMode === 'grid' ? <ViewList /> : <ViewModule />}
-        </button>
+        <div className="view-toggle">
+          <button
+            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => toggleViewMode('list')}
+          >
+            <ViewList />
+          </button>
+          <button
+            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+            onClick={() => toggleViewMode('grid')}
+          >
+            <ViewModule />
+          </button>
+          <button
+            className={`view-toggle-btn ${viewMode === 'tile' ? 'active' : ''}`}
+            onClick={() => toggleViewMode('tile')}
+          >
+            <ViewQuilt />
+          </button>
+        </div>
       </header>
       <div className="container">
         <nav className="left-menu">
