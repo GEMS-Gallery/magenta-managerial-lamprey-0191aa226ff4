@@ -171,9 +171,16 @@ body {
     padding: 0;
     margin-right: 12px;
 }
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 .action-icon {
     width: 20px;
     height: 20px;
+}
+.action-icon.liked {
+    fill: #ed4956;
 }
 .post-likes {
     font-weight: 600;

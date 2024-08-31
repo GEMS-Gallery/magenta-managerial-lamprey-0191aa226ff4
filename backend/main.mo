@@ -21,6 +21,7 @@ actor {
     creator: Principal;
     createdAt: Int;
     likes: Nat;
+    likedBy: [Principal];
     comments: [Comment];
   };
 
@@ -65,21 +66,37 @@ actor {
       creator = msg.caller;
       createdAt = Time.now();
       likes = 0;
+      likedBy = [];
       comments = [];
     };
     photos.put(id, newPhoto);
     #ok(id)
   };
 
-  public func likePhoto(photoId: Nat) : async Result.Result<(), Text> {
+  public shared(msg) func likePhoto(photoId: Nat) : async Result.Result<(), Text> {
     switch (photos.get(photoId)) {
       case (null) { #err("Photo not found") };
       case (?photo) {
-        let updatedPhoto = {
-          photo with likes = photo.likes + 1
-        };
-        photos.put(photoId, updatedPhoto);
-        #ok()
+        if (Array.find<Principal>(photo.likedBy, func(p) { p == msg.caller }) != null) {
+          #err("You have already liked this photo")
+        } else {
+          let updatedPhoto = {
+            photo with
+            likes = photo.likes + 1;
+            likedBy = Array.append(photo.likedBy, [msg.caller]);
+          };
+          photos.put(photoId, updatedPhoto);
+          #ok()
+        }
+      };
+    }
+  };
+
+  public query(msg) func hasLikedPhoto(photoId: Nat) : async Bool {
+    switch (photos.get(photoId)) {
+      case (null) { false };
+      case (?photo) {
+        Array.find<Principal>(photo.likedBy, func(p) { p == msg.caller }) != null
       };
     }
   };

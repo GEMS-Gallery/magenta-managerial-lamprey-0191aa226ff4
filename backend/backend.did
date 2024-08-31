@@ -16,6 +16,7 @@ type Photo =
    creator: principal;
    id: nat;
    imageUrl: text;
+   likedBy: vec principal;
    likes: nat;
    title: text;
  };
@@ -31,6 +32,7 @@ service : {
   getPhotos: () -> (vec Photo) query;
   getPhotosByCategory: (text) -> (vec Photo) query;
   getProfilePicture: () -> (opt text) query;
+  hasLikedPhoto: (nat) -> (bool) query;
   likePhoto: (nat) -> (Result);
   removePhoto: (nat) -> (Result);
   setProfilePicture: (text) -> (Result);
