@@ -60,6 +60,10 @@ body {
 .menu-item:hover {
     background-color: #fafafa;
 }
+.menu-item.selected {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
 .menu-icon {
     width: 24px;
     height: 24px;

@@ -91,7 +91,7 @@ const App: React.FC = () => {
           {Object.entries(categoryIcons).map(([category, icon]) => (
             <div
               key={category}
-              className="menu-item"
+              className={`menu-item ${selectedCategory === category ? 'selected' : ''}`}
               onClick={() => setSelectedCategory(category)}
             >
               {icon}
