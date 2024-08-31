@@ -29,5 +29,6 @@ service : {
   addComment: (nat, text, text) -> (Result);
   addPhoto: (text, text, text, text) -> (Result_1);
   getPhotos: () -> (vec Photo) query;
+  getPhotosByCategory: (text) -> (vec Photo) query;
   likePhoto: (nat) -> (Result);
 }

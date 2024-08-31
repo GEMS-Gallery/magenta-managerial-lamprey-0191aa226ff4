@@ -1,3 +1,4 @@
+import Bool "mo:base/Bool";
 import Hash "mo:base/Hash";
 
 import Array "mo:base/Array";
@@ -10,7 +11,6 @@ import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 
 actor {
-  // Types
   type Photo = {
     id: Nat;
     title: Text;
@@ -28,22 +28,22 @@ actor {
     createdAt: Int;
   };
 
-  // Stable variables
   stable var nextPhotoId: Nat = 0;
   stable var photoEntries: [(Nat, Photo)] = [];
 
-  // Initialize HashMap from stable variable
   let photos = HashMap.fromIter<Nat, Photo>(photoEntries.vals(), 0, Nat.equal, Int.hash);
 
-  // Helper functions
   func generateId() : Nat {
     nextPhotoId += 1;
     nextPhotoId - 1
   };
 
-  // API
   public query func getPhotos() : async [Photo] {
     Iter.toArray(photos.vals())
+  };
+
+  public query func getPhotosByCategory(category: Text) : async [Photo] {
+    Iter.toArray(Iter.filter(photos.vals(), func (photo: Photo) : Bool { photo.category == category }))
   };
 
   public func addPhoto(title: Text, category: Text, imageUrl: Text, creator: Text) : async Result.Result<Nat, Text> {
@@ -93,7 +93,6 @@ actor {
     }
   };
 
-  // Upgrade hooks
   system func preupgrade() {
     photoEntries := Iter.toArray(photos.entries());
   };

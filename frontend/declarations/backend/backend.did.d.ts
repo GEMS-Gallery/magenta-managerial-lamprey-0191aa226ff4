@@ -25,6 +25,7 @@ export interface _SERVICE {
   'addComment' : ActorMethod<[bigint, string, string], Result>,
   'addPhoto' : ActorMethod<[string, string, string, string], Result_1>,
   'getPhotos' : ActorMethod<[], Array<Photo>>,
+  'getPhotosByCategory' : ActorMethod<[string], Array<Photo>>,
   'likePhoto' : ActorMethod<[bigint], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
